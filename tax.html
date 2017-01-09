@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset='utf-8'>
+		<script src='http://d3js.org/d3.v3.min.js'></script>
+		<script type='text/javascript' 
+		src='http://code.jquery.com/jquery-1.6.2.min.js'></script>
+		<script type='text/javascript' src='jquery.tipsy.js'></script>
+		<link href='tipsy.css' rel='stylesheet' type='text/css' />
+		<style>
+			h2 {
+				color: black;
+				opacity: 0.7;
+				text-align: center;
+				position: absolute;
+				top: 5px;
+				left: 155px;
+			}	
+			h3 {
+				color: black;
+				opacity: 0.7;
+				padding-right: 5px;
+				position: absolute;
+				top: 10px;
+				left: 620px;
+			}	
+			text {
+				font: helvetica;
+				font-family: sans-serif;
+				opacity: 0.7;
+				font-weight: 600;
+				font-size: 13px;
+			}
+			.axis path,
+			.axis line {
+				fill: none;
+				stroke: black;
+				shape-rendering: crispEdges;
+			}
+			.axis text {
+				font-family: sans-serif;
+				font-size: 11px;
+			}
+			div.state_buttons {
+				position: fixed;
+				top: 15px;
+				left: 770px;
+				font: helvetica;
+				font-weight: 600;
+				text-align: center;
+			}
+			div.state_buttons div.swing {
+				background-color: rgba(128, 115, 172, .5);
+			}
+			div.state_buttons div.blue {
+				background-color: rgba(33, 102, 172, .5);
+			}
+			div.state_buttons div.red {
+				background-color: rgba(178, 24, 43, .5);
+			}
+			div.state_buttons div.selected {
+				background-color: rgba(173, 216, 230, 1);
+			}
+			div.state_buttons div {
+				background-color: rgb(251, 201, 127);
+				border-radius: 5px;
+				padding: 1px;
+				margin: 1px;
+			}
+			div.blue_button {
+				position: fixed;
+				top: 250px;
+				left: 75px;
+				font: helvetica;
+				font-weight: 600;
+				text-align: center;
+			}
+			div.purple_button {
+				position: fixed;
+				top: 250px;
+				left: 300px;
+				font: helvetica;
+				font-weight: 600;
+				text-align: center;
+			}
+			div.red_button {
+				position: fixed;
+				top: 250px;
+				left: 535px;
+				font: helvetica;
+				font-weight: 600;
+				text-align: center;
+			}
+			svg {
+				border-radius: 5px;
+				box-shadow: 0px 0px 0px 5px rgba(0,0,0,0.5);
+			}
+		</style>
+		<script type='text/javascript'>
+			'use strict';
+			function draw(csv_data) {
+				var m = 75,
+					w = 775 - m,
+					h = 1075 - m;
+
+				d3.select('body')
+					.append('h2')
+					.text('Vote power vs. Taxes received');
+
+				d3.select('body')
+					.append('h3')
+					.text('by Tim Moore');
+
+				var svg = d3.select('body')
+							.append('svg')
+							.attr('width', w + m)
+							.attr('height', h + m)
+							.append('g')
+							.attr('class', 'scatter');
+
+				svg.append('g')
+					.append('rect')
+					.attr('x', 50)
+					.attr('y', 50)
+					.attr('rx', 5)
+					.attr('ry', 5)
+					.attr('height', 175)
+					.attr('width', 700)
+					.attr('fill', 'rgb(9,157,217)')
+					.attr('opacity', 0.5)
+					.attr('stroke', 'black')
+					.attr('stroke-width', 3.5);
+
+				svg.append('g')
+					.append('text')
+					.attr('class', 'text line_1')
+					.attr('x', 60)
+					.attr('y', 65)
+					.text('Observe below, two different Returns On Investment\
+						 (ROI\'s). The X-axis is an individual\'s ROI \
+						 for voting as');	
+
+				svg.append('g')
+					.append('text')
+					.attr('class', 'text line_2')
+					.attr('x', 60)
+					.attr('y', 80)
+					.text('characterized by the ratio of voters to Electoral \
+						College Votes. The Y-axis is a state\'s ROI for federal\
+						 taxes.');
+
+				svg.append('g')
+					.append('text')
+					.attr('class', 'text line_3')
+					.attr('x', 60)
+					.attr('y', 95)
+					.text('Each state is characterized by a circle, \
+						proportional in size to it\'s Electoral College votes.\
+						 The color signify\'s');
+
+				svg.append('g')
+					.append('text')
+					.attr('class', 'text line_4')
+					.attr('x', 60)
+					.attr('y', 110)
+					.text('the state\'s voting history for Presidential \
+						elections. Deeper red indicates more votes for \
+						Republicans, while');
+
+				svg.append('g')
+					.append('text')
+					.attr('class', 'text line_5')
+					.attr('x', 60)
+					.attr('y', 125)
+					.text('deeper blue shades indicate more elections choosing \
+						a Democratic candidate.');
+
+				svg.append('g')
+					.append('text')
+					.attr('class', 'text line_6')
+					.attr('x', 60)
+					.attr('y', 155)
+					.text('Over the 25 years for which this data is available, \
+						we observe red states are lower in population than \
+						swing');
+
+				svg.append('g')
+					.append('text')
+					.attr('class', 'text line_7')
+					.attr('x', 60)
+					.attr('y', 170)
+					.text('or blue states. Yet these red states consistently \
+						receive more in Federal Expenditures than they \
+						contribute');
+
+				svg.append('g')
+					.append('text')
+					.attr('class', 'text line_8')
+					.attr('x', 60)
+					.attr('y', 185)
+					.text('in Federal Taxes. This relationship becomes more \
+						pronounced over time and is especially');
+
+				svg.append('g')
+					.append('text')
+					.attr('class', 'text line_9')
+					.attr('x', 60)
+					.attr('y', 200)
+					.text('apparent when looking at the mean values for red, \
+						blue and swing states.');
+				
+				var more_info = svg.append('a')
+								.attr('class', 'link article')
+								.attr('xlink:href', 'http://www.nytimes.com/\
+									2016/12/03/opinion/sunday/why-blue-states\
+									-are-the-real-tea-party.html')
+								.append('rect')
+								.attr('x', 635)
+								.attr('y', 175)
+								.attr('height', 35)
+								.attr('width', 95)
+								.attr('fill', 'rgb(251,201,127)')
+								.attr('rx', 5)
+								.attr('ry', 5);
+
+				var info_text = svg.append('text')
+									.attr('class', 'link_text link')
+									.attr('x', 682.5)
+									.attr('y', 198)
+									.attr('text-anchor', 'middle')
+									.style('pointer-events', 'none')
+									.text('More info');
+
+
+				function plot_points(data) {
+					function agg_year(leaves) {
+						var state = d3.set(),
+							year = d3.set(),
+							fed_taxes = d3.set(),
+							fed_expenditures = d3.set(),
+							fed_expenditure_tax_ratio = d3.set(),
+							electoral_votes = d3.set(),
+							voters = d3.set(),
+							electors_per_voter = d3.set(),
+							r_votes = d3.set();
+						
+						leaves.forEach(function(d) {
+							state.add(d['State']);
+							year.add(+d.Year);
+							fed_taxes.add(+d['Federal Taxes paid']);
+							fed_expenditures.add(
+								+d['Federal Spending received']);
+							fed_expenditure_tax_ratio.add(
+						+d['Federal Spending received per dollar of tax paid']);
+							electoral_votes.add(+d['Electoral votes']);
+							voters.add(+d['Presidential voters']);
+							electors_per_voter.add(
+								+d['Electors per voter']);
+							r_votes.add(+d['Times voted R']);
+						});
+
+						return {
+			'state' : state.values()[0],
+			'year' : +year.values()[0],
+			'fed_taxes': +fed_taxes.values()[0],
+			'fed_expenditures': +fed_expenditures.values()[0],
+			'fed_expenditure_tax_ratio': +fed_expenditure_tax_ratio.values()[0],
+			'electoral_votes': +electoral_votes.values()[0],
+			'voters': +voters.values()[0],
+			'electors_per_voter': +electors_per_voter.values()[0],
+			'r_votes': +r_votes.values()[0],
+						};
+					}
+
+					var state_list = d3.set();
+					data.forEach(function(d) {
+						state_list.add(d['State'])
+					});
+
+					var years = d3.nest()
+									.key(function(d) {
+										return d.Year; })
+									.key(function(d) {
+										return d.State;
+									})
+									.rollup(agg_year)
+									.entries(data);
+
+					var states = d3.nest()
+									.key(function(d) {
+										return d.State;	})
+									.key(function(d) {
+										return d.Year;	})
+									.rollup(agg_year)
+									.entries(data);
+
+					var range_7 = ['#2166ac','#4393c3','#92c5de','#d1e5f0',
+									'#fddbc7', '#f4a582', '#d6604d', '#b2182b'],
+					range_6 = ['#2166ac','#4393c3','#92c5de','#8073ac',
+								'#f4a582', '#d6604d', '#b2182b'],
+					range_5 = ['#2166ac', '#4393c3', '#92c5de',
+								'#f4a582', '#d6604d', '#b2182b'],
+					range_4 = ['#2166ac', '#92c5de','#8073ac', '#f4a582', 
+								'#b2182b'],
+					range_3 = ['#2166ac','#92c5de','#f4a582', '#b2182b'],
+					range_2 = ['#2166ac', '#8073ac', '#b2182b'],
+					range_1 = ['#2166ac', '#b2182b'];
+
+					var post_codes = ['AL', 'AK', 'AZ', 'AR', 'CA', 'CO', 'CT', 
+					'DE', 'FL', 'GA', 'HI', 'ID', 'IL', 'IN', 'IA', 'KS', 'KY',
+					'LA', 'ME', 'MD', 'MA', 'MI', 'MN', 'MS', 'MO', 'MT', 'NE',
+					'NV', 'NH', 'NJ', 'NM', 'NY', 'NC', 'ND', 'OH', 'OK', 'OR',
+					'PA', 'RI', 'SC', 'SD', 'TN', 'TX', 'UT', 'VT', 'VI', 'WA',
+					'WV', 'WI', 'WY'];
+
+					var max_electors = d3.max(years, function(d) {
+						return d3.max(d.values, function(d) {
+							return d.values['electoral_votes'];	});});
+
+					var min_electors = d3.min(years, function(d) {
+						return d3.min(d.values, function(d) {
+							return d.values['electoral_votes'];	});});
+
+					var state_code = d3.scale.ordinal()
+												.domain(state_list.values())
+												.range(post_codes);
+
+					var radius = d3.scale.sqrt()
+										.domain([min_electors, max_electors])
+										.range([5, 25]);
+
+					var max_tax_ratio = d3.max(years, function(d) {
+						return d3.max(d.values, function(d) {
+						return d.values['fed_expenditure_tax_ratio']; }); });
+
+					var max_vote_ratio = d3.max(years, function(d) {
+						return d3.max(d.values, function(d) {
+							return d.values['electors_per_voter'];	}); });
+					
+					var x_scale = d3.scale.linear()
+											.domain([0, 
+												max_vote_ratio])
+											.range([50, 750]);
+
+					var y_scale = d3.scale.linear()
+											.domain([0,
+												max_tax_ratio])
+											.range([1000, 250]);
+
+					var x_axis = d3.svg.axis().scale(x_scale).orient('bottom');
+
+					var y_axis = d3.svg.axis().scale(y_scale).orient('left');
+
+					svg.append('g')
+						.attr('class', 'x axis')
+						.attr('transform', 'translate(0,1005)')
+						.call(x_axis)
+						.append('text')
+						.attr('class', 'label')
+						.attr('x', 415)
+						.attr('y', 40)
+						.style('text-anchor', 'end')
+						.text('Vote strength');
+
+					svg.append('g')
+						.attr('class', 'y axis')
+						.attr('transform', 'translate(50,0)')
+						.call(y_axis)
+						.append('text')
+						.attr('class', 'label')
+						.attr('x', -575)
+						.attr('y', -35)
+						.style('transform', 'rotate(270deg)')
+						.style('text-anchor', 'end')
+						.text('Federal Tax ROI');
+
+					svg.append('line')
+								.attr('x1', 50)
+								.attr('x2', 750)
+								.attr('y1', y_scale(1))
+								.attr('y2', y_scale(1))
+								.attr('stroke', 'steelblue')
+								.attr('stroke-width', 1);
+
+					svg.append('line')
+								.attr('x1', x_scale(0.0000054376))
+								.attr('x2', x_scale(0.0000054376))
+								.attr('y1', 250)
+								.attr('y2', 1005)
+								.attr('stroke', 'steelblue')
+								.attr('stroke-width', 1);
+
+					svg.append('text')
+								.attr('x', x_scale(0.0000054376)-115)
+								.attr('y', 950)
+								.text('Average Electoral College votes per \
+									voter')
+								.style('color', 'blue');
+
+					svg.append('text')
+								.attr('x', 650)
+								.attr('y', y_scale(1)+18)
+								.text('Break-even line')
+								.style('color', 'blue');
+
+
+					function update(year) {
+						var filtered = years.filter(function(d) {
+							return +d.key === +year;	});
+
+						if(year <= 1983){
+							var color = d3.scale.ordinal()
+												.domain([0,1])
+												.range(range_1);
+						}else if(year <= 1987){
+							var color = d3.scale.ordinal()
+												.domain([0,1,2])
+												.range(range_2);
+						}else if(year <= 1991){
+							var color = d3.scale.ordinal()
+												.domain([0,1,2,3])
+												.range(range_3);
+						}else if(year <= 1995){
+							var color = d3.scale.ordinal()
+												.domain([0,1,2,3,4])
+												.range(range_4);
+						}else if(year <= 1999){
+							var color = d3.scale.ordinal()
+												.domain([0,1,2,3,4,5])
+												.range(range_5);
+						}else if(year <=2003){
+							var color = d3.scale.ordinal()
+												.domain([0,1,2,3,4,5,6])
+												.range(range_6);
+						}else{
+							var color = d3.scale.ordinal()
+												.domain([0,1,2,3,4,5,6,7])
+												.range(range_7);
+						}
+												
+						d3.select('h2')
+							.text('Vote power vs. Tax ROI - '+ year);
+
+						var circles = svg.selectAll('.bubble')
+										.data(filtered[0].values, function(d) {
+											return d.values.state;	});
+
+						d3.selectAll('.bubble')
+							.data(filtered[0])
+							.exit()
+							.remove();
+						
+						circles.enter()
+								.append('circle')
+								.attr('class', 'bubble')
+								.transition()
+								.duration(250)
+								.attr('cx', function(d) { 
+									return x_scale(d.values[
+										'electors_per_voter']);	})
+								.attr('cy', function(d) {
+									return y_scale(d.values[
+										'fed_expenditure_tax_ratio']);	})
+								.attr('r', function(d) {
+									return radius(d.values.electoral_votes);})
+								.attr('fill', function(d) {
+									return color(d.values.r_votes);	})
+								.attr('stroke', 'black')
+								.attr('opacity', .5);
+
+						let format = d3.format(',');
+						$('svg circle').tipsy({
+							gravity: 'sw',
+							html: true,
+							title: function() {
+								var d = this.__data__, state = d.values.state,
+							taxes = format(d.values.fed_taxes), 
+							expenditures = format(d.values.fed_expenditures)
+								, year = d.values.year;
+								return state + ' - '+ year +'<br> Received $'
+								+expenditures+'\
+								million<br> Paid $'+taxes+' million';}});
+					}
+
+					function red_states() {
+						var red_states = years[24].values.filter(function(d){
+							return +d.values.r_votes >=6;	});
+
+						var red_keys = red_states.map(function(d) {
+							return d.key;	});
+
+ 						red_keys.forEach(function(d) {
+							d3.select('.'+state_code(d))
+								.classed('red', true);
+						})
+
+						var red_nest = d3.nest()
+										.key(function(d) {return d.Year;})
+										.sortKeys(d3.ascending)
+										.rollup(function(v) {
+											return {
+							electoral_votes: d3.mean(v, function(d) {
+								return +d['Electoral votes'];}),
+							votes_per_voter: d3.mean(v, function(d) {
+								return +d['Electors per voter'];}),
+							fed_spending_ratio: d3.mean(v, function(d) {
+			return +d['Federal Spending received per dollar of tax paid'];}),
+							fed_taxes: d3.mean(v, function(d) {
+								return +d['Federal Taxes paid'];}),
+							fed_expenditures: d3.mean(v, function(d) {
+								return +d['Federal Spending received'];	})};})
+										.entries(data.filter(function(d) {
+											if(red_keys.includes(d.State))
+												return d.State;	}));
+
+						d3.selectAll('.bubble')
+							.data(years[0])
+							.exit()
+							.remove();
+						
+						function red_update(year) {
+							var red_year = red_nest.filter(
+								function(d) {return +d.key === +year;});
+
+							d3.select('h2')
+								.text('Mean Republican State - ' +year)
+								.style('left', 250+'px');
+
+							d3.selectAll('circle')
+								.attr('opacity', 0.2);
+
+							svg.append('circle')
+								.attr('class', 'bubble')
+								.transition()
+								.duration(250)
+								.attr('cx', function(d) {
+						return x_scale(red_year[0].values.votes_per_voter);
+								})
+								.attr('cy', function(d) {
+						return y_scale(red_year[0].values.fed_spending_ratio);
+								})
+								.attr('r', function(d) {
+						return radius(red_year[0].values.electoral_votes);
+								})
+								.attr('fill', '#b2182b')
+								.attr('stroke', 'black')
+								.attr('opacity', 0.5);
+
+							let format = d3.format(',');
+							$('svg circle').tipsy({
+								gravity: 'sw',
+								html: true,
+								title: function() {
+									var d = red_year[0],
+				taxes = format(d.values.fed_taxes.toFixed(2)),
+				expenditures = format(d.values.fed_expenditures.toFixed(2)),
+									year = +d.key;
+									return "In " + year +' the mean Republican'
+									+' state:<br><br> Paid $'+taxes
+									+' million in Federal Taxes and <br>' 
+									+'Received $'+expenditures+' million in '
+									+'Federal Expenditures'; }
+							});
+						};
+
+						var year_idx = 0;
+
+						var red_interval = setInterval(function() {
+							var current_red_year = all_years[year_idx];
+							red_update(current_red_year);
+							year_idx++;
+
+							if(year_idx >= all_years.length) {
+								clearInterval(red_interval);
+							}
+						}, 500);
+
+					};
+
+					function blue_states() {
+						var blue_states = years[24].values.filter(function(d){
+							return +d.values.r_votes <=2;	});
+
+						var blue_keys = blue_states.map(function(d) {
+							return d.key;	});
+						
+						blue_keys.forEach(function(d) {
+							d3.select('.'+state_code(d))
+								.classed('blue', true);
+						})
+
+						var blue_nest = d3.nest()
+											.key(function(d) {return d.Year;})
+											.sortKeys(d3.ascending)
+											.rollup(function(v) {
+												return {
+							electoral_votes: d3.mean(v, function(d) {
+								return +d['Electoral votes'];}),
+							votes_per_voter: d3.mean(v, function(d) {
+								return +d['Electors per voter'];}),
+							fed_spending_ratio: d3.mean(v, function(d) {
+		return +d['Federal Spending received per dollar of tax paid'];}),
+							fed_taxes: d3.mean(v, function(d) {
+								return +d['Federal Taxes paid'];}),
+							fed_expenditures: d3.mean(v, function(d) {
+								return +d['Federal Spending received'];	})};
+						})
+											.entries(data.filter(function(d) {
+												if(blue_keys.includes(d.State))
+													return d.State;	}));
+
+						d3.selectAll('.bubble')
+							.data(years[0])
+							.exit()
+							.remove();
+
+						function blue_update(year) {
+							var blue_year = blue_nest.filter(
+								function(d) {return +d.key === +year;});
+
+							d3.select('h2')
+								.text('Mean Democratic State - ' +year)
+								.style('left', 250+'px');
+
+							d3.selectAll('circle')
+								.attr('opacity', 0.2);
+
+							svg.append('circle')
+								.attr('class', 'bubble')
+								.transition()
+								.duration(250)
+								.attr('cx', function(d) {
+						return x_scale(blue_year[0].values.votes_per_voter);
+								})
+								.attr('cy', function(d) {
+						return y_scale(blue_year[0].values.fed_spending_ratio);
+								})
+								.attr('r', function(d) {
+						return radius(blue_year[0].values.electoral_votes);
+								})
+								.attr('fill', '#2166ac')
+								.attr('stroke', 'black')
+								.attr('opacity', 0.5);
+
+							let format = d3.format(',');
+							$('svg circle').tipsy({
+								gravity: 'sw',
+								html: true,
+								title: function() {
+									var d = blue_year[0],
+				taxes = format(d.values.fed_taxes.toFixed(2)),
+				expenditures = format(d.values.fed_expenditures.toFixed(2)),
+									year = +d.key;
+									return "In " + year +' the mean Democratic'
+									+' state:<br><br> Paid $'+taxes
+									+' million in Federal Taxes and <br>' 
+									+'Received $'+expenditures+' million in '
+									+'Federal Expenditures'}
+							})
+						};
+
+						var year_idx = 0;
+
+						var blue_interval = setInterval(function() {
+							var current_blue_year = all_years[year_idx];
+							blue_update(current_blue_year);
+							year_idx++;
+							if(year_idx >= all_years.length) {
+								clearInterval(blue_interval);
+							}
+						}, 500);
+					};
+
+					function purple_states() {
+						var purple_states = years[24].values.filter(function(d)
+							{return (+d.values.r_votes > 2 && 
+								+d.values.r_votes < 6);	});
+
+						var swing_keys = purple_states.map(function(d) {
+							return d.key;	});
+
+						swing_keys.forEach(function(d) {
+							d3.select('.'+state_code(d))
+								.classed('swing', true);
+						})
+						
+						var swing_nest = d3.nest()
+											.key(function(d) {return d.Year;})
+											.sortKeys(d3.ascending)
+											.rollup(function(v) {
+												return {
+							electoral_votes: d3.mean(v, function(d) {
+								return +d['Electoral votes'];}),
+							votes_per_voter: d3.mean(v, function(d) {
+								return +d['Electors per voter'];}),
+							fed_spending_ratio: d3.mean(v, function(d) {
+			return +d['Federal Spending received per dollar of tax paid'];}),
+							fed_taxes: d3.mean(v, function(d) {
+								return +d['Federal Taxes paid'];}),
+							fed_expenditures: d3.mean(v, function(d) {
+								return +d['Federal Spending received'];	})};})
+											.entries(data.filter(function(d) {
+											   if(swing_keys.includes(d.State))
+													return d.State;	}));
+
+						d3.selectAll('.bubble')
+							.data(years[0])
+							.exit()
+							.remove();
+
+						function swing_update(year) {
+							var swing_year = swing_nest.filter(
+								function(d) {return +d.key === +year;});
+
+							d3.select('h2')
+								.text('Mean Swing State - ' +year)
+								.style('left', 275+'px');
+
+							d3.selectAll('circle')
+								.attr('opacity', 0.2);
+
+							svg.append('circle')
+								.attr('class', 'bubble')
+								.transition()
+								.duration(250)
+								.attr('cx', function(d) {
+						return x_scale(swing_year[0].values.votes_per_voter);
+								})
+								.attr('cy', function(d) {
+						return y_scale(swing_year[0].values.fed_spending_ratio);
+								})
+								.attr('r', function(d) {
+						return radius(swing_year[0].values.electoral_votes);
+								})
+								.attr('fill', '#8073ac')
+								.attr('stroke', 'black')
+								.attr('opacity', 0.5);
+
+							let format = d3.format(',');
+							$('svg circle').tipsy({
+								gravity: 'sw',
+								html: true,
+								title: function() {
+									var d = swing_year[0],
+							taxes = format(d.values.fed_taxes.toFixed(2)),
+				expenditures = format(d.values.fed_expenditures.toFixed(2)),
+								year = +d.key;
+								return 'In ' +year+' the mean Swing state<br>'
+								+'<br>Paid $'+taxes+' million in Federal Taxes'
+								+'and<br>Received $'+expenditures+' million in'
+								+' Federal Expenditures';}	});
+						};
+
+						var year_idx = 0;
+
+						var swing_interval = setInterval(function() {
+							var current_swing_year = all_years[year_idx];
+							swing_update(current_swing_year);
+							year_idx++;
+
+							if(year_idx >= all_years.length) {
+								clearInterval(swing_interval);
+							}
+						}, 500);
+					};
+
+					function update_state(state) {
+						var filtered = states.filter(function(d) {
+							return d.key === state;	});
+						debugger;
+
+						var circles = svg.selectAll('.bubble')
+										.data(filtered[0]);
+
+						circles.exit().remove();
+
+						function update_state_year(year) {
+							var state_years = filtered[0].values.filter(
+								function(d) {return +d.key === +year;	});
+
+							if(year <= 1983){
+								var color = d3.scale.ordinal()
+													.domain([0,1])
+													.range(range_1);
+							}else if(year <= 1987){
+								var color = d3.scale.ordinal()
+													.domain([0,1,2])
+													.range(range_2);
+							}else if(year <= 1991){
+								var color = d3.scale.ordinal()
+													.domain([0,1,2,3])
+													.range(range_3);
+							}else if(year <= 1995){
+								var color = d3.scale.ordinal()
+													.domain([0,1,2,3,4])
+													.range(range_4);
+							}else if(year <= 1999){
+								var color = d3.scale.ordinal()
+													.domain([0,1,2,3,4,5])
+													.range(range_5);
+							}else if(year <= 2003){
+								var color = d3.scale.ordinal()
+													.domain([0,1,2,3,4,5,6])
+													.range(range_6);
+							}else{
+								var color = d3.scale.ordinal()
+													.domain([0,1,2,3,4,5,6,7])
+													.range(range_7);
+							};
+							d3.select('h2')
+								.text(state + ' - ' +year)
+								.style('left', 300+'px');
+
+							d3.selectAll('circle')
+								.attr('opacity', .2);
+
+							svg.append('circle')
+										.attr('class', 'bubble')
+										.transition()
+										.duration(250)
+										.attr('cx', function(d) {
+									return x_scale(state_years[0].values[
+									'electors_per_voter']);	})
+										.attr('cy', function(d) {
+									return y_scale(state_years[0].values[
+									'fed_expenditure_tax_ratio']);	})
+										.attr('r', function(d) {
+									return radius(state_years[0]
+											.values.electoral_votes);})
+										.attr('fill', function(d) {
+									return color(state_years[0]
+											.values.r_votes);	})
+										.attr('stroke', 'black')
+										.attr('opacity', .5);
+
+							let format = d3.format(',');
+							$('svg circle').tipsy({
+								gravity: 'sw',
+								html: true,
+								title: function() {
+									var d = state_years[0], 
+									state = d.values.state,
+									taxes = format(d.values.fed_taxes), 
+									expenditures = format(
+										d.values.fed_expenditures), 
+									year = d.values.year;
+									return state + ' - '+ year+
+									'<br><br> Received $'
+									+expenditures+'\
+									million<br> Paid $'+taxes+' million';
+									}
+							});
+						};
+							var year_idx = 0;
+
+							var state_interval = setInterval(function() {
+
+								var current_state_year = all_years[year_idx];
+								update_state_year(current_state_year);
+								year_idx++;
+								
+								if(year_idx >= all_years.length) {
+									clearInterval(state_interval);
+								}
+							}, 500);
+
+					};
+					var year_idx = 0;
+
+					var all_years = [1981, 1982, 1983, 1984, 1985, 1986, 1987,
+					1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997,
+					1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005];
+
+					var year_interval = setInterval(function() {
+						var current_year = all_years[year_idx];
+						update(current_year);
+						year_idx++;
+
+						if(year_idx >= all_years.length) {
+							clearInterval(year_interval);
+
+							// change svg size and add buttons for interaction
+							d3.select('svg')
+								.transition()
+								.duration(100)
+								.attr('width', 880)
+								.attr('height', 1165);
+
+							var data_info = svg.append('a')
+												.attr('class', 'attribution')
+												.attr('xlink:href', 'http://\
+													www.taxfoundation.org')
+												.append('rect')
+												.attr('x', 535)
+												.attr('y', 1130)
+												.attr('height', 30)
+												.attr('width', 95)
+											.attr('fill', 'rgb(251,201,127)')
+												.attr('rx', 5)
+												.attr('ry', 5);
+
+							var data_text = svg.append('text')
+											.attr('class', 'attribution')
+											.attr('x', 582.5)
+											.attr('y', 1150)
+											.attr('text-anchor', 'middle')
+											.style('pointer-events', 'none')
+											.attr('color', 'black')
+											.text('Tax info');
+
+							var buttons = d3.select('body')
+											.append('div')
+											.attr('class', 'state_buttons')
+											.selectAll('div')
+											.data(state_list.values())
+											.enter()
+											.append('div')
+											.attr('class', function(d) {
+												return state_code(d);})
+											.text(function(d) {return d;});
+
+							var blue_button = d3.select('body')
+												.append('div')
+												.attr('class', 
+													'blue_button')
+												.text('Average Blue State')
+												.style('background-color',
+													'rgba(33,102,172,0.55)')
+												.style('border-radius', '5px')
+												.style('margin', '5px')
+												.style('padding', '5px');
+
+							var red_button = d3.select('body')
+												.append('div')
+												.attr('class', 'red_button')
+												.text('Average Red State')
+												.style('background-color',
+													'rgba(178,24,43,0.55)')
+												.style('border-radius', '5px')
+												.style('margin', '5px')
+												.style('padding', '5px');
+
+							var purple_button = d3.select('body')
+												.append('div')
+												.attr('class', 'purple_button')
+												.text('Average Swing State')
+												.style('background-color',
+													'rgba(128,115,172,0.55)')
+												.style('border-radius', '5px')
+												.style('margin', '5px')
+												.style('padding', '5px');
+
+							// Button interaction section
+							blue_button.on('click', function(d) {
+								d3.select(this)
+									.transition()
+									.duration(100)
+									.style('background', 
+										'rgba(33,102,172,0.25)');
+								d3.selectAll('.selected')
+									.classed('selected', false);
+								d3.selectAll('.red')
+									.classed('red', false);
+								d3.selectAll('.swing')
+									.classed('swing', false);
+								d3.selectAll('.blue')
+									.classed('blue', false);
+								blue_states();
+							})
+
+							blue_button.on('mouseleave', function(d) {
+								d3.select(this)
+									.transition()
+									.duration(100)
+									.style('background', 
+										'rgba(33,102,172,0.55)');
+							})
+
+							purple_button.on('click', function(d) {
+								d3.select(this)
+									.transition()
+									.duration(100)
+									.style('background',
+										'rgba(128,115,172,0.25)');
+								d3.selectAll('.selected')
+									.classed('selected', false);
+								d3.selectAll('.red')
+									.classed('red', false);
+								d3.selectAll('.blue')
+									.classed('blue', false);
+								d3.selectAll('.swing')
+									.classed('swing', false);
+								purple_states();
+							})
+
+							purple_button.on('mouseleave', function(d) {
+								d3.select(this)
+									.transition()
+									.duration(100)
+									.style('background',
+										'rgba(128,115,172,0.55)');
+							})
+
+							red_button.on('click', function(d) {
+								d3.select(this)
+									.transition()
+									.duration(100)
+									.style('background-color',
+										'rgba(178,24,43,0.25)');
+								d3.selectAll('.selected')
+									.classed('selected', false);
+								d3.selectAll('.red')
+									.classed('red', false);
+								d3.selectAll('.blue')
+									.classed('blue', false);
+								d3.selectAll('.swing')
+									.classed('swing', false);
+								red_states();
+							})
+
+							red_button.on('mouseleave', function(d) {
+								d3.select(this)
+									.transition()
+									.duration(100)
+									.style('background-color',
+										'rgba(178,24,43,0.55)');
+							})
+
+							buttons.on('click', function(d) {
+								d3.selectAll('.selected')
+									.classed('selected', false);
+								d3.selectAll('.red')
+									.classed('red', false);
+								d3.selectAll('.blue')
+									.classed('blue', false);
+								d3.selectAll('.swing')
+									.classed('swing', false);
+								d3.select(this)
+									.classed('selected', true);
+								update_state(d);
+							})
+
+						}
+					}, 500);
+
+				};
+			plot_points(csv_data);
+			};
+		</script>
+	</head>
+	<body>
+		<script type='text/javascript'>
+			d3.csv('State_tax.csv', draw);
+		</script>
+	</body>
+</html>
