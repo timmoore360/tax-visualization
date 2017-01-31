@@ -5,29 +5,50 @@
 		<script src='http://d3js.org/d3.v3.min.js'></script>
 		<script type='text/javascript' 
 		src='http://code.jquery.com/jquery-1.6.2.min.js'></script>
+		<link href="https://fonts.googleapis.com/css?family=Raleway" 
+		rel="stylesheet">
 		<script type='text/javascript' src='jquery.tipsy.js'></script>
 		<link href='tipsy.css' rel='stylesheet' type='text/css' />
 		<style>
 			h2 {
+				font-family: 'Raleway', sans-serif;
 				color: black;
 				opacity: 0.7;
+			}
+			h1 {
+				font-family: 'Raleway', sans-serif;
+				color: black;
+				opacity: .7;
+			}
+			.title {
+				position: fixed;
+				top: 0px;
+				left:10%;
 				text-align: center;
-				position: absolute;
-				top: 5px;
-				left: 155px;
 			}	
+			.year {
+				position: fixed;
+				text-anchor: center;
+				top: 25px;
+				left: 40%;
+			}
 			h3 {
+				font-family: 'Raleway', sans-serif;
 				color: black;
 				opacity: 0.7;
 				padding-right: 5px;
 				position: absolute;
-				top: 10px;
-				left: 620px;
+				top: 25px;
+				right: 20px;
 			}	
-			text {
-				font: helvetica;
-				font-family: sans-serif;
+			text.box {
+				font-family: 'Raleway', sans-serif;
 				opacity: 0.7;
+				font-weight: 600;
+				font-size: 11.5px;
+			}
+			text.link {
+				font-family: 'Raleway', sans-serif;
 				font-weight: 600;
 				font-size: 13px;
 			}
@@ -38,14 +59,16 @@
 				shape-rendering: crispEdges;
 			}
 			.axis text {
-				font-family: sans-serif;
-				font-size: 11px;
+				font-family: 'Raleway', sans-serif;
+				font-size: 13px;
 			}
 			div.state_buttons {
 				position: fixed;
-				top: 15px;
-				left: 770px;
-				font: helvetica;
+				width: 18%;
+				height: 50%;
+				right: 5px;
+				top: 75px;
+				font-family: 'Raleway', sans-serif;
 				font-weight: 600;
 				text-align: center;
 			}
@@ -64,36 +87,67 @@
 			div.state_buttons div {
 				background-color: rgb(251, 201, 127);
 				border-radius: 5px;
-				padding: 1px;
-				margin: 1px;
+				padding: 1.5px;
+				margin: 1.5px;
+				cursor: pointer;
 			}
-			div.blue_button {
-				position: fixed;
-				top: 250px;
-				left: 75px;
-				font: helvetica;
+			text.start_text {
+				font-family: 'Raleway', sans-serif;
 				font-weight: 600;
 				text-align: center;
 			}
-			div.purple_button {
-				position: fixed;
-				top: 250px;
-				left: 300px;
-				font: helvetica;
+			text.average{
+				font-family: 'Raleway', sans-serif;
 				font-weight: 600;
 				text-align: center;
 			}
-			div.red_button {
-				position: fixed;
-				top: 250px;
-				left: 535px;
-				font: helvetica;
+			text.legend {
+				font-family: 'Raleway', sans-serif;
 				font-weight: 600;
 				text-align: center;
 			}
-			svg {
-				border-radius: 5px;
-				box-shadow: 0px 0px 0px 5px rgba(0,0,0,0.5);
+			.blue_button {
+				cursor: pointer;
+			}
+			.start_button {
+				cursor: pointer;
+			}
+			.purple_button {
+				cursor: pointer;
+			}
+			.red_button {
+				cursor: pointer;
+			}
+			.state_buttons {
+				width: 20%;
+				padding-bottom: calc(20% * 1025/880);
+			}
+			.svg-container {
+				width: 80%;
+				padding-bottom: calc(80% * 1025/880);
+			}
+			.svg-content-responsive {
+				position: absolute;
+				left: 10px;
+				right: 70px;
+				bottom: 10px;
+				overflow: visible;
+			}
+			text.quadrant-label {
+				font-family: 'Raleway', sans-serif;
+				font-weight: 700;
+				font-size: 11px;
+			}
+			text.label {
+				font-family: 'Raleway', sans-serif;
+				font-weight: 600;
+				font-size: 12px;
+				opacity: .5;
+			}
+			text.axis {
+				font-family: 'Raleway', sans-serif;
+				font-weight: 600;
+				font-size: 12px;
 			}
 		</style>
 		<script type='text/javascript'>
@@ -105,27 +159,49 @@
 
 				d3.select('body')
 					.append('h2')
-					.text('Vote power vs. Taxes received');
+					.classed('title', true)
+					.text('Democrat, Republican or Swing State: Who gets the \
+						better deal?');
+
+				d3.select('body')
+					.append('h1')
+					.classed('year', true)
+					.text('');
 
 				d3.select('body')
 					.append('h3')
 					.text('by Tim Moore');
 
 				var svg = d3.select('body')
+							.append('div')
+							.classed('svg-container', true)
 							.append('svg')
-							.attr('width', w + m)
-							.attr('height', h + m)
+							.attr('preserveAspectRatio', 'xMidYMin meet')
+							.attr('viewBox', '0 0 ' + 880 + ' ' + 1065)
+							.classed('svg-content-responsive', true)
 							.append('g')
 							.attr('class', 'scatter');
 
-				svg.append('g')
-					.append('rect')
+				svg.append('rect')
 					.attr('x', 50)
-					.attr('y', 50)
+					.attr('y', 80)
 					.attr('rx', 5)
 					.attr('ry', 5)
-					.attr('height', 175)
-					.attr('width', 700)
+					.attr('height', 75)
+					.attr('width', 710)
+					.attr('fill', 'rgb(9,157,217)')
+					.attr('opacity', 0.5)
+					.attr('stroke', 'black')
+					.attr('stroke-width', 3.5);
+
+				svg.append('rect')
+					.classed('legend', true)
+					.attr('x', 520)
+					.attr('y', 760)
+					.attr('rx', 5)
+					.attr('ry', 5)
+					.attr('height', 140)
+					.attr('width', 235)
 					.attr('fill', 'rgb(9,157,217)')
 					.attr('opacity', 0.5)
 					.attr('stroke', 'black')
@@ -133,81 +209,65 @@
 
 				svg.append('g')
 					.append('text')
-					.attr('class', 'text line_1')
-					.attr('x', 60)
-					.attr('y', 65)
-					.text('Observe below, two different Returns On Investment\
-						 (ROI\'s). The X-axis is an individual\'s ROI \
-						 for voting as');	
+					.attr('class', 'quadrant-label')
+					.attr('x', 55)
+					.attr('y', 230)
+					.text('Over-paid / Under-represented');
 
 				svg.append('g')
 					.append('text')
-					.attr('class', 'text line_2')
-					.attr('x', 60)
-					.attr('y', 80)
-					.text('characterized by the ratio of voters to Electoral \
-						College Votes. The Y-axis is a state\'s ROI for federal\
-						 taxes.');
+					.attr('class', 'quadrant-label')
+					.attr('x', 570)
+					.attr('y', 230)
+					.text('Over-paid / Over-represented');
 
 				svg.append('g')
 					.append('text')
-					.attr('class', 'text line_3')
+					.attr('class', 'quadrant-label')
+					.attr('x', 55)
+					.attr('y', 930)
+					.text('Under-paid / Under-represented');
+
+				svg.append('g')
+					.append('text')
+					.attr('class', 'quadrant-label')
+					.attr('x', 570)
+					.attr('y', 930)
+					.text('Under-paid / Over-represented');
+
+				svg.append('g')
+					.append('text')
+					.attr('class', 'text line_1 box')
 					.attr('x', 60)
 					.attr('y', 95)
-					.text('Each state is characterized by a circle, \
-						proportional in size to it\'s Electoral College votes.\
-						 The color signify\'s');
-
-				svg.append('g')
-					.append('text')
-					.attr('class', 'text line_4')
-					.attr('x', 60)
-					.attr('y', 110)
-					.text('the state\'s voting history for Presidential \
-						elections. Deeper red indicates more votes for \
-						Republicans, while');
-
-				svg.append('g')
-					.append('text')
-					.attr('class', 'text line_5')
-					.attr('x', 60)
-					.attr('y', 125)
-					.text('deeper blue shades indicate more elections choosing \
-						a Democratic candidate.');
-
-				svg.append('g')
-					.append('text')
-					.attr('class', 'text line_6')
-					.attr('x', 60)
-					.attr('y', 155)
 					.text('Over the 25 years for which this data is available, \
 						we observe red states are lower in population than \
 						swing');
 
 				svg.append('g')
 					.append('text')
-					.attr('class', 'text line_7')
+					.attr('class', 'text line_2 box')
 					.attr('x', 60)
-					.attr('y', 170)
+					.attr('y', 110)
 					.text('or blue states. Yet these red states consistently \
 						receive more in Federal Expenditures than they \
 						contribute');
 
 				svg.append('g')
 					.append('text')
-					.attr('class', 'text line_8')
+					.attr('class', 'text line_3 box')
 					.attr('x', 60)
-					.attr('y', 185)
+					.attr('y', 125)
 					.text('in Federal Taxes. This relationship becomes more \
-						pronounced over time and is especially');
+						pronounced over time and is');
 
 				svg.append('g')
 					.append('text')
-					.attr('class', 'text line_9')
+					.attr('class', 'text line_4 box')
 					.attr('x', 60)
-					.attr('y', 200)
-					.text('apparent when looking at the mean values for red, \
-						blue and swing states.');
+					.attr('y', 140)
+					.text('especially apparent when looking at the mean values \
+						for red, blue and swing states.');
 				
 				var more_info = svg.append('a')
 								.attr('class', 'link article')
@@ -216,7 +276,7 @@
 									-are-the-real-tea-party.html')
 								.append('rect')
 								.attr('x', 635)
-								.attr('y', 175)
+								.attr('y', 115)
 								.attr('height', 35)
 								.attr('width', 95)
 								.attr('fill', 'rgb(251,201,127)')
@@ -226,7 +286,7 @@
 				var info_text = svg.append('text')
 									.attr('class', 'link_text link')
 									.attr('x', 682.5)
-									.attr('y', 198)
+									.attr('y', 137)
 									.attr('text-anchor', 'middle')
 									.style('pointer-events', 'none')
 									.text('More info');
@@ -327,7 +387,7 @@
 
 					var radius = d3.scale.sqrt()
 										.domain([min_electors, max_electors])
-										.range([5, 25]);
+										.range([6, 25]);
 
 					var max_tax_ratio = d3.max(years, function(d) {
 						return d3.max(d.values, function(d) {
@@ -345,18 +405,63 @@
 					var y_scale = d3.scale.linear()
 											.domain([0,
 												max_tax_ratio])
-											.range([1000, 250]);
+											.range([940, 220]);
 
 					var x_axis = d3.svg.axis().scale(x_scale).orient('bottom');
 
 					var y_axis = d3.svg.axis().scale(y_scale).orient('left');
 
+					svg.append('circle')
+						.attr('class', 'legend')
+						.attr('cx', 550)
+						.attr('cy', 780)
+						.attr('r', radius(3))
+						.attr('fill', '#8073ac')
+						.attr('stroke', 'black')
+						.attr('opacity', .5);
+
+					svg.append('text')
+						.attr('class', 'legend')
+						.attr('x', 590)
+						.attr('y', 783)
+						.text('3 Electoral Votes');
+
+					svg.append('circle')
+						.attr('class', 'legend')
+						.attr('cx', 550)
+						.attr('cy', 813)
+						.attr('r', radius(15))
+						.attr('fill', '#8073ac')
+						.attr('stroke', 'black')
+						.attr('opacity', .5);
+
+					svg.append('text')
+						.attr('class', 'legend')
+						.attr('x', 590)
+						.attr('y', 815)
+						.text('15 Electoral Votes');
+
+					svg.append('circle')
+						.attr('class', 'legend')
+						.attr('cx', 550)
+						.attr('cy', 863)
+						.attr('r', radius(45))
+						.attr('fill', '#8073ac')
+						.attr('stroke', 'black')
+						.attr('opacity', .5);
+
+					svg.append('text')
+						.attr('class', 'legend')
+						.attr('x', 590)
+						.attr('y', 865)
+						.text('45 Electoral Votes');
+
 					svg.append('g')
 						.attr('class', 'x axis')
-						.attr('transform', 'translate(0,1005)')
+						.attr('transform', 'translate(0,945)')
 						.call(x_axis)
 						.append('text')
-						.attr('class', 'label')
+						.attr('class', 'axis')
 						.attr('x', 415)
 						.attr('y', 40)
 						.style('text-anchor', 'end')
@@ -367,8 +472,8 @@
 						.attr('transform', 'translate(50,0)')
 						.call(y_axis)
 						.append('text')
-						.attr('class', 'label')
-						.attr('x', -575)
+						.attr('class', 'axis')
+						.attr('x', -595)
 						.attr('y', -35)
 						.style('transform', 'rotate(270deg)')
 						.style('text-anchor', 'end')
@@ -385,21 +490,23 @@
 					svg.append('line')
 								.attr('x1', x_scale(0.0000054376))
 								.attr('x2', x_scale(0.0000054376))
-								.attr('y1', 250)
-								.attr('y2', 1005)
+								.attr('y1', 220)
+								.attr('y2', 945)
 								.attr('stroke', 'steelblue')
 								.attr('stroke-width', 1);
 
 					svg.append('text')
+								.attr('class', 'label')
 								.attr('x', x_scale(0.0000054376)-115)
-								.attr('y', 950)
+								.attr('y', 890)
 								.text('Average Electoral College votes per \
 									voter')
 								.style('color', 'blue');
 
 					svg.append('text')
+								.attr('class', 'label')
 								.attr('x', 650)
-								.attr('y', y_scale(1)+18)
+								.attr('y', y_scale(1)+16)
 								.text('Break-even line')
 								.style('color', 'blue');
 
@@ -438,23 +545,23 @@
 												.range(range_7);
 						}
 												
-						d3.select('h2')
-							.text('Vote power vs. Tax ROI - '+ year);
-
-						var circles = svg.selectAll('.bubble')
-										.data(filtered[0].values, function(d) {
-											return d.values.state;	});
+						d3.select('.year')
+							.text(year);
 
 						d3.selectAll('.bubble')
 							.data(filtered[0])
 							.exit()
 							.remove();
-						
+
+						var circles = svg.selectAll('.bubble')
+										.data(filtered[0].values, function(d) {
+											return d.values.state;	});
+
 						circles.enter()
 								.append('circle')
 								.attr('class', 'bubble')
 								.transition()
-								.duration(250)
+								.duration(100)
 								.attr('cx', function(d) { 
 									return x_scale(d.values[
 										'electors_per_voter']);	})
@@ -522,9 +629,9 @@
 							var red_year = red_nest.filter(
 								function(d) {return +d.key === +year;});
 
-							d3.select('h2')
+							d3.select('.year')
 								.text('Mean Republican State - ' +year)
-								.style('left', 250+'px');
+								.style('left', 20+'%');
 
 							d3.selectAll('circle')
 								.attr('opacity', 0.2);
@@ -618,9 +725,9 @@
 							var blue_year = blue_nest.filter(
 								function(d) {return +d.key === +year;});
 
-							d3.select('h2')
+							d3.select('.year')
 								.text('Mean Democratic State - ' +year)
-								.style('left', 250+'px');
+								.style('left', 20+'%');
 
 							d3.selectAll('circle')
 								.attr('opacity', 0.2);
@@ -712,9 +819,9 @@
 							var swing_year = swing_nest.filter(
 								function(d) {return +d.key === +year;});
 
-							d3.select('h2')
+							d3.select('.year')
 								.text('Mean Swing State - ' +year)
-								.style('left', 275+'px');
+								.style('left', 20 + '%');
 
 							d3.selectAll('circle')
 								.attr('opacity', 0.2);
@@ -807,9 +914,9 @@
 													.domain([0,1,2,3,4,5,6,7])
 													.range(range_7);
 							};
-							d3.select('h2')
+							d3.select('.year')
 								.text(state + ' - ' +year)
-								.style('left', 300+'px');
+								.style('left', 20+'%');
 
 							d3.selectAll('circle')
 								.attr('opacity', .2);
@@ -880,11 +987,7 @@
 							clearInterval(year_interval);
 
 							// change svg size and add buttons for interaction
-							d3.select('svg')
-								.transition()
-								.duration(100)
-								.attr('width', 880)
-								.attr('height', 1165);
+
 
 							var data_info = svg.append('a')
 												.attr('class', 'attribution')
@@ -892,7 +995,7 @@
 													www.taxfoundation.org')
 												.append('rect')
 												.attr('x', 535)
-												.attr('y', 1130)
+												.attr('y', 970)
 												.attr('height', 30)
 												.attr('width', 95)
 											.attr('fill', 'rgb(251,201,127)')
@@ -900,9 +1003,9 @@
 												.attr('ry', 5);
 
 							var data_text = svg.append('text')
-											.attr('class', 'attribution')
+											.attr('class', 'attribution link')
 											.attr('x', 582.5)
-											.attr('y', 1150)
+											.attr('y', 990)
 											.attr('text-anchor', 'middle')
 											.style('pointer-events', 'none')
 											.attr('color', 'black')
@@ -919,39 +1022,68 @@
 												return state_code(d);})
 											.text(function(d) {return d;});
 
-							var blue_button = d3.select('body')
-												.append('div')
-												.attr('class', 
-													'blue_button')
-												.text('Average Blue State')
-												.style('background-color',
-													'rgba(33,102,172,0.55)')
-												.style('border-radius', '5px')
-												.style('margin', '5px')
-												.style('padding', '5px');
+							var blue_button = svg.append('rect')
+												.attr('class', 'blue_button')
+												.attr('x', 60)
+												.attr('y', 170)
+												.attr('height', 30)
+												.attr('width', 180)
+												.attr('rx', 5)
+												.attr('ry', 5)
+												.attr('fill', 'rgba(33,102,172,0.55)');
 
-							var red_button = d3.select('body')
-												.append('div')
+							var blue_text = svg.append('text')
+												.attr('class', 'average')
+												.attr('x', 150)
+												.attr('y', 190)
+												.attr('text-anchor', 'middle')
+												.style('pointer-events', 'none')
+												.attr('color', 'black')
+												.text('Average Blue State');
+
+							var red_button = svg.append('rect')
 												.attr('class', 'red_button')
-												.text('Average Red State')
-												.style('background-color',
-													'rgba(178,24,43,0.55)')
-												.style('border-radius', '5px')
-												.style('margin', '5px')
-												.style('padding', '5px');
+												.attr('x', 540)
+												.attr('y', 170)
+												.attr('height', 30)
+												.attr('width', 180)
+												.attr('rx', 5)
+												.attr('ry', 5)
+												.attr('fill', 'rgba(178,24,43,0.55)');
 
-							var purple_button = d3.select('body')
-												.append('div')
+							var red_text = svg.append('text')
+												.attr('class', 'average')
+												.attr('x', 630)
+												.attr('y', 190)
+												.attr('text-anchor', 'middle')
+												.style('pointer-events', 'none')
+												.attr('color', 'black')
+												.text('Average Red State');
+
+							var purple_button = svg.append('rect')
 												.attr('class', 'purple_button')
-												.text('Average Swing State')
-												.style('background-color',
-													'rgba(128,115,172,0.55)')
-												.style('border-radius', '5px')
-												.style('margin', '5px')
-												.style('padding', '5px');
+												.attr('x', 295)
+												.attr('y', 170)
+												.attr('height', 30)
+												.attr('width', 180)
+												.attr('rx', 5)
+												.attr('ry', 5)
+												.attr('fill', 'rgba(128,115,172,0.55)');
+
+							var purple_text = svg.append('text')
+												.attr('class', 'average')
+												.attr('x', 385)
+												.attr('y', 190)
+												.attr('text-anchor', 'middle')
+												.style('pointer-events', 'none')
+												.attr('color', 'black')
+												.text('Average Swing State');
 
 							// Button interaction section
 							blue_button.on('click', function(d) {
+								d3.selectAll('.active')
+									.classed('active', false);
+
 								d3.select(this)
 									.transition()
 									.duration(100)
@@ -1041,7 +1173,7 @@
 							})
 
 						}
-					}, 500);
+					}, 1000) ;
 
 				};
 			plot_points(csv_data);
