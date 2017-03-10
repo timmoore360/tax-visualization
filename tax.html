@@ -18,19 +18,19 @@
 			h1 {
 				font-family: 'Raleway', sans-serif;
 				color: black;
-				opacity: .7;
+				opacity: 1;
 			}
 			.title {
-				position: fixed;
+				position: absolute;
 				top: 0px;
-				left:10%;
+				left:25px;
 				text-align: center;
 			}	
 			.year {
 				position: fixed;
 				text-anchor: center;
 				top: 25px;
-				left: 40%;
+				left: 300px;
 			}
 			h3 {
 				font-family: 'Raleway', sans-serif;
@@ -39,7 +39,7 @@
 				padding-right: 5px;
 				position: absolute;
 				top: 25px;
-				right: 20px;
+				left: 600px;
 			}	
 			text.box {
 				font-family: 'Raleway', sans-serif;
@@ -60,13 +60,12 @@
 			}
 			.axis text {
 				font-family: 'Raleway', sans-serif;
-				font-size: 13px;
+				font-size: 9px;
 			}
 			div.state_buttons {
 				position: fixed;
-				width: 18%;
-				height: 50%;
-				right: 5px;
+				height: 720px;
+				left: 620px;
 				top: 75px;
 				font-family: 'Raleway', sans-serif;
 				font-weight: 600;
@@ -119,43 +118,26 @@
 				cursor: pointer;
 			}
 			.state_buttons {
-				width: 20%;
-				padding-bottom: calc(20% * 1025/880);
-			}
-			.svg-container {
-				width: 80%;
-				padding-bottom: calc(80% * 1025/880);
-			}
-			.svg-content-responsive {
-				position: absolute;
-				left: 10px;
-				right: 70px;
-				bottom: 10px;
-				overflow: visible;
+				overflow: auto;
 			}
 			text.quadrant-label {
 				font-family: 'Raleway', sans-serif;
 				font-weight: 700;
-				font-size: 11px;
+				font-size: 8px;
 			}
 			text.label {
 				font-family: 'Raleway', sans-serif;
 				font-weight: 600;
 				font-size: 12px;
-				opacity: .5;
-			}
-			text.axis {
-				font-family: 'Raleway', sans-serif;
-				font-weight: 600;
-				font-size: 12px;
+				opacity: .6;
 			}
 		</style>
 		<script type='text/javascript'>
 			'use strict';
 			function draw(csv_data) {
 				var m = 75,
-					w = 775 - m,
-					h = 1075 - m;
+					w = 600 ,
+					h = 820 ;
 
 				d3.select('body')
 					.append('h2')
@@ -173,22 +155,19 @@
 					.text('by Tim Moore');
 
 				var svg = d3.select('body')
-							.append('div')
-							.classed('svg-container', true)
 							.append('svg')
-							.attr('preserveAspectRatio', 'xMidYMin meet')
-							.attr('viewBox', '0 0 ' + 880 + ' ' + 1065)
-							.classed('svg-content-responsive', true)
+							.attr('width', w)
+							.attr('height', h)
 							.append('g')
 							.attr('class', 'scatter');
 
 				svg.append('rect')
-					.attr('x', 50)
+					.attr('x', 25)
 					.attr('y', 80)
 					.attr('rx', 5)
 					.attr('ry', 5)
 					.attr('height', 75)
-					.attr('width', 710)
+					.attr('width', 570)
 					.attr('fill', 'rgb(9,157,217)')
 					.attr('opacity', 0.5)
 					.attr('stroke', 'black')
@@ -196,12 +175,12 @@
 
 				svg.append('rect')
 					.classed('legend', true)
-					.attr('x', 520)
-					.attr('y', 760)
+					.attr('x', 385)
+					.attr('y', 635)
 					.attr('rx', 5)
 					.attr('ry', 5)
-					.attr('height', 140)
-					.attr('width', 235)
+					.attr('height', 112)
+					.attr('width', 210)
 					.attr('fill', 'rgb(9,157,217)')
 					.attr('opacity', 0.5)
 					.attr('stroke', 'black')
@@ -211,34 +190,34 @@
 					.append('text')
 					.attr('class', 'quadrant-label')
 					.attr('x', 55)
-					.attr('y', 230)
+					.attr('y', 210)
 					.text('Over-paid / Under-represented');
 
 				svg.append('g')
 					.append('text')
 					.attr('class', 'quadrant-label')
-					.attr('x', 570)
-					.attr('y', 230)
+					.attr('x', 460)
+					.attr('y', 210)
 					.text('Over-paid / Over-represented');
 
 				svg.append('g')
 					.append('text')
 					.attr('class', 'quadrant-label')
 					.attr('x', 55)
-					.attr('y', 930)
+					.attr('y', 756)
 					.text('Under-paid / Under-represented');
 
 				svg.append('g')
 					.append('text')
 					.attr('class', 'quadrant-label')
-					.attr('x', 570)
-					.attr('y', 930)
+					.attr('x', 460)
+					.attr('y', 756)
 					.text('Under-paid / Over-represented');
 
 				svg.append('g')
 					.append('text')
 					.attr('class', 'text line_1 box')
-					.attr('x', 60)
+					.attr('x', 30)
 					.attr('y', 95)
 					.text('Over the 25 years for which this data is available, \
 						we observe red states are lower in population than \
@@ -247,7 +226,7 @@
 				svg.append('g')
 					.append('text')
 					.attr('class', 'text line_2 box')
-					.attr('x', 60)
+					.attr('x', 30)
 					.attr('y', 110)
 					.text('or blue states. Yet these red states consistently \
 						receive more in Federal Expenditures than they \
@@ -256,7 +235,7 @@
 				svg.append('g')
 					.append('text')
 					.attr('class', 'text line_3 box')
-					.attr('x', 60)
+					.attr('x', 30)
 					.attr('y', 125)
 					.text('in Federal Taxes. This relationship becomes more \
 						pronounced over time and is');
@@ -264,7 +243,7 @@
 				svg.append('g')
 					.append('text')
 					.attr('class', 'text line_4 box')
-					.attr('x', 60)
+					.attr('x', 30)
 					.attr('y', 140)
 					.text('especially apparent when looking at the mean values \
 						for red, blue and swing states.');
@@ -275,7 +254,7 @@
 									2016/12/03/opinion/sunday/why-blue-states\
 									-are-the-real-tea-party.html')
 								.append('rect')
-								.attr('x', 635)
+								.attr('x', 490)
 								.attr('y', 115)
 								.attr('height', 35)
 								.attr('width', 95)
@@ -285,7 +264,7 @@
 
 				var info_text = svg.append('text')
 									.attr('class', 'link_text link')
-									.attr('x', 682.5)
+									.attr('x', 537.5)
 									.attr('y', 137)
 									.attr('text-anchor', 'middle')
 									.style('pointer-events', 'none')
@@ -293,6 +272,7 @@
 
 
 				function plot_points(data) {
+
 					function agg_year(leaves) {
 						var state = d3.set(),
 							year = d3.set(),
@@ -400,12 +380,12 @@
 					var x_scale = d3.scale.linear()
 											.domain([0, 
 												max_vote_ratio])
-											.range([50, 750]);
+											.range([25, 575]);
 
 					var y_scale = d3.scale.linear()
 											.domain([0,
 												max_tax_ratio])
-											.range([940, 220]);
+											.range([760, 200]);
 
 					var x_axis = d3.svg.axis().scale(x_scale).orient('bottom');
 
@@ -413,8 +393,8 @@
 
 					svg.append('circle')
 						.attr('class', 'legend')
-						.attr('cx', 550)
-						.attr('cy', 780)
+						.attr('cx', 420)
+						.attr('cy', 650)
 						.attr('r', radius(3))
 						.attr('fill', '#8073ac')
 						.attr('stroke', 'black')
@@ -422,14 +402,14 @@
 
 					svg.append('text')
 						.attr('class', 'legend')
-						.attr('x', 590)
-						.attr('y', 783)
+						.attr('x', 450)
+						.attr('y', 654)
 						.text('3 Electoral Votes');
 
 					svg.append('circle')
 						.attr('class', 'legend')
-						.attr('cx', 550)
-						.attr('cy', 813)
+						.attr('cx', 420)
+						.attr('cy', 680)
 						.attr('r', radius(15))
 						.attr('fill', '#8073ac')
 						.attr('stroke', 'black')
@@ -437,14 +417,14 @@
 
 					svg.append('text')
 						.attr('class', 'legend')
-						.attr('x', 590)
-						.attr('y', 815)
+						.attr('x', 450)
+						.attr('y', 683)
 						.text('15 Electoral Votes');
 
 					svg.append('circle')
 						.attr('class', 'legend')
-						.attr('cx', 550)
-						.attr('cy', 863)
+						.attr('cx', 420)
+						.attr('cy', 720)
 						.attr('r', radius(45))
 						.attr('fill', '#8073ac')
 						.attr('stroke', 'black')
@@ -452,18 +432,18 @@
 
 					svg.append('text')
 						.attr('class', 'legend')
-						.attr('x', 590)
-						.attr('y', 865)
+						.attr('x', 450)
+						.attr('y', 723)
 						.text('45 Electoral Votes');
 
 					svg.append('g')
 						.attr('class', 'x axis')
-						.attr('transform', 'translate(0,945)')
+						.attr('transform', 'translate(25,760)')
 						.call(x_axis)
 						.append('text')
-						.attr('class', 'axis')
-						.attr('x', 415)
-						.attr('y', 40)
+						.attr('class', 'label')
+						.attr('x', 315)
+						.attr('y', 35)
 						.style('text-anchor', 'end')
 						.text('Vote strength');
 
@@ -472,8 +452,8 @@
 						.attr('transform', 'translate(50,0)')
 						.call(y_axis)
 						.append('text')
-						.attr('class', 'axis')
-						.attr('x', -595)
+						.attr('class', 'label')
+						.attr('x', -485)
 						.attr('y', -35)
 						.style('transform', 'rotate(270deg)')
 						.style('text-anchor', 'end')
@@ -481,7 +461,7 @@
 
 					svg.append('line')
 								.attr('x1', 50)
-								.attr('x2', 750)
+								.attr('x2', 575)
 								.attr('y1', y_scale(1))
 								.attr('y2', y_scale(1))
 								.attr('stroke', 'steelblue')
@@ -491,25 +471,28 @@
 								.attr('x1', x_scale(0.0000054376))
 								.attr('x2', x_scale(0.0000054376))
 								.attr('y1', 220)
-								.attr('y2', 945)
+								.attr('y2', 760)
 								.attr('stroke', 'steelblue')
 								.attr('stroke-width', 1);
 
 					svg.append('text')
 								.attr('class', 'label')
 								.attr('x', x_scale(0.0000054376)-115)
-								.attr('y', 890)
+								.attr('y', 710)
 								.text('Average Electoral College votes per \
 									voter')
 								.style('color', 'blue');
 
 					svg.append('text')
 								.attr('class', 'label')
-								.attr('x', 650)
+								.attr('x', 470)
 								.attr('y', y_scale(1)+16)
 								.text('Break-even line')
 								.style('color', 'blue');
 
+					d3.select('svg')
+					  .transition()
+					  .delay(5000);
 
 					function update(year) {
 						var filtered = years.filter(function(d) {
@@ -994,8 +977,8 @@
 												.attr('xlink:href', 'http://\
 													www.taxfoundation.org')
 												.append('rect')
-												.attr('x', 535)
-												.attr('y', 970)
+												.attr('x', 500)
+												.attr('y', 785)
 												.attr('height', 30)
 												.attr('width', 95)
 											.attr('fill', 'rgb(251,201,127)')
@@ -1004,8 +987,8 @@
 
 							var data_text = svg.append('text')
 											.attr('class', 'attribution link')
-											.attr('x', 582.5)
-											.attr('y', 990)
+											.attr('x', 547.5)
+											.attr('y', 804)
 											.attr('text-anchor', 'middle')
 											.style('pointer-events', 'none')
 											.attr('color', 'black')
@@ -1024,18 +1007,18 @@
 
 							var blue_button = svg.append('rect')
 												.attr('class', 'blue_button')
-												.attr('x', 60)
-												.attr('y', 170)
+												.attr('x', 25)
+												.attr('y', 165)
 												.attr('height', 30)
-												.attr('width', 180)
+												.attr('width', 160)
 												.attr('rx', 5)
 												.attr('ry', 5)
 												.attr('fill', 'rgba(33,102,172,0.55)');
 
 							var blue_text = svg.append('text')
 												.attr('class', 'average')
-												.attr('x', 150)
-												.attr('y', 190)
+												.attr('x', 105)
+												.attr('y', 185)
 												.attr('text-anchor', 'middle')
 												.style('pointer-events', 'none')
 												.attr('color', 'black')
@@ -1043,18 +1026,18 @@
 
 							var red_button = svg.append('rect')
 												.attr('class', 'red_button')
-												.attr('x', 540)
-												.attr('y', 170)
+												.attr('x', 435)
+												.attr('y', 165)
 												.attr('height', 30)
-												.attr('width', 180)
+												.attr('width', 160)
 												.attr('rx', 5)
 												.attr('ry', 5)
 												.attr('fill', 'rgba(178,24,43,0.55)');
 
 							var red_text = svg.append('text')
 												.attr('class', 'average')
-												.attr('x', 630)
-												.attr('y', 190)
+												.attr('x', 515)
+												.attr('y', 185)
 												.attr('text-anchor', 'middle')
 												.style('pointer-events', 'none')
 												.attr('color', 'black')
@@ -1062,8 +1045,8 @@
 
 							var purple_button = svg.append('rect')
 												.attr('class', 'purple_button')
-												.attr('x', 295)
-												.attr('y', 170)
+												.attr('x', 225)
+												.attr('y', 165)
 												.attr('height', 30)
 												.attr('width', 180)
 												.attr('rx', 5)
@@ -1072,8 +1055,8 @@
 
 							var purple_text = svg.append('text')
 												.attr('class', 'average')
-												.attr('x', 385)
-												.attr('y', 190)
+												.attr('x', 315)
+												.attr('y', 185)
 												.attr('text-anchor', 'middle')
 												.style('pointer-events', 'none')
 												.attr('color', 'black')
